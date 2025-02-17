@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package hello_world;
+
+option go_package = "05_protobuf/helloworld";
+
+// 在 go-learn 目录下
+// 生成 Protobuf 消息代码: protoc -I 05_protobuf helloworld.proto --go_out=.
+// 生成 gRPC 服务代码: protoc -I 05_protobuf helloworld.proto --go-grpc_out=.
+
+// 定义枚举类型
+enum Color {
+  // 第一个枚举值必须为 0
+  COLOR_UNSPECIFIED = 0;
+  RED = 1;
+  GREEN = 2;
+  BLUE = 3;
+}
+
+message HelloRequest {
+  string name = 1; // 1是编号
+  Color color = 2;
+}
+
+message HelloResponse {
+  string reply = 1;
+}
+
+service HelloWorld {
+  rpc Hello(HelloRequest) returns(HelloResponse); // hello接口
+}
