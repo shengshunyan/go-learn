@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package helloworld;
+
+option go_package = "07_stream_grpc/proto";
+
+// 在 go-learn 目录下
+// 生成 Protobuf 消息代码: protoc -I 07_stream_grpc/proto stream.proto --go_out=.
+// 生成 gRPC 服务代码: protoc -I 07_stream_grpc/proto stream.proto --go-grpc_out=.
+
+message StreamReq {
+  string data = 1;
+}
+
+message StreamResp {
+  string data = 1;
+}
+
+service Greeter {
+  rpc ServerStream(StreamReq) returns(stream StreamResp); // 服务端流模式
+  rpc ClientStream(stream StreamReq) returns(StreamResp); // 客户端流模式
+  rpc AllStream(stream StreamReq) returns(stream StreamResp); // 双向流模式
+}
