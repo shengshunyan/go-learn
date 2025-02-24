@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package helloworld;
+
+option go_package = "11_grpc_validate/proto";
+
+// 在 go-learn 目录下
+// 生成 Protobuf 消息代码 和 validate 代码: protoc -I 11_grpc_validate/proto helloworld.proto --go_out=":." --validate_out="lang=go:."
+
+import "validate/validate.proto";
+
+message Person {
+  uint64 id = 1 [(validate.rules).uint64.gt = 999];
+
+  string email = 2 [(validate.rules).string.email = true];
+
+  string name = 3 [(validate.rules).string = {
+    pattern:   "^[A-Za-z]+( [A-Za-z]+)*$",
+    max_bytes: 256,
+  }];
+
+  Location home = 4 [(validate.rules).message.required = true];
+
+  message Location {
+    double lat = 1 [(validate.rules).double = {gte: -90,  lte: 90}];
+    double lng = 2 [(validate.rules).double = {gte: -180, lte: 180}];
+  }
+}

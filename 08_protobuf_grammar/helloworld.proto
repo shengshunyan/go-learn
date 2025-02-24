@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// 01. proto文件import语法
+import "base.proto";
+
+package helloworld;
+option go_package = "08_protobuf_grammar/proto";
+
+// 在 go-learn 目录下
+// 生成 Protobuf 消息代码: protoc -I 08_protobuf_grammar helloworld.proto --go_out=.
+// 生成 gRPC 服务代码: protoc -I 08_protobuf_grammar helloworld.proto --go-grpc_out=.
+
+
+service HelloWorld {
+  rpc Hello(HelloRequest) returns(HelloResponse); // hello接口
+}

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package helloworld;
+
+option go_package = "08_protobuf_grammar/proto";
+
+// 在 go-learn 目录下
+// 生成 Protobuf 消息代码: protoc -I 08_protobuf_grammar base.proto --go_out=.
+// 生成 gRPC 服务代码: protoc -I 08_protobuf_grammar base.proto --go-grpc_out=.
+
+// 03 枚举类型：生产的go代码为常量Gender_MALE和Gender_FEMALE
+enum Gender {
+  MALE = 0;
+  FEMALE = 1;
+}
+
+message HelloRequest {
+  string name = 1; // 1是编号
+  string age = 2;
+  Gender gender = 3;
+  // 02 嵌套的message对象，生产的go文件类型是HelloRequestAddress
+  message address {
+    string street = 1;
+    int32 code = 2;
+  }
+  // 04 map类型
+  map<string, string> mp = 4;
+}
+
+message HelloResponse {
+  string reply = 1;
+}
