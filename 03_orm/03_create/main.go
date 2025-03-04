@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -12,7 +13,7 @@ import (
 
 type Product struct {
 	gorm.Model
-	Code  string
+	Code  sql.NullString
 	Price uint
 }
 
@@ -34,28 +35,20 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	fmt.Println("connect database success", db)
+	fmt.Println("connect database success")
 	// 会执行建表语句
 	err = db.AutoMigrate(&Product{})
 	if err != nil {
 		panic("failed to auto migrate database")
 	}
 
-	// Create
-	//db.Create(&Product{Code: "D42", Price: 100})
+	product := &Product{Code: sql.NullString{"D42", true}, Price: 100}
+	result := db.Create(product)
 
-	// Read
-	var product Product
-	db.First(&product, 1) // 根据整型主键查找
-	//db.First(&product, "code = ?", "D42") // 查找 code 字段值为 D42 的记录
-	fmt.Println(product)
+	fmt.Println(product.ID)
+	fmt.Println(result.Error)
+	fmt.Println(result.RowsAffected)
 
-	// Update - 将 product 的 price 更新为 200
-	db.Model(&product).Update("Price", 200)
-	// Update - 更新多个字段
-	db.Model(&product).Updates(Product{Price: 200, Code: "F42"}) // 仅更新非零值字段
-	db.Model(&product).Updates(map[string]interface{}{"Price": 200, "Code": "F42"})
-
-	// Delete - 删除 product
-	db.Delete(&product, 1)
+	/** 用sql.NullString类型，让orm可以更新string为零值（空字符串） */
+	//db.Model(&product).Updates(Product{Code: sql.NullString{Valid: true, String: ""}})
 }
