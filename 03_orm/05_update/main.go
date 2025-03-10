@@ -40,14 +40,6 @@ func main() {
 		panic("failed to auto migrate database")
 	}
 
-	/** 单条插入 */
-	//product := &Product{Code: "D42", Price: 100}
-	//result := db.Create(product)
-	//fmt.Println(product.ID)
-	//fmt.Println(result.Error)
-	//fmt.Println(result.RowsAffected)
+	db.Model(&Product{}).Where("id = ?", 1).Update("price", 2)
 
-	/** 批量插入 */
-	products := []Product{{Code: "D01", Price: 10}, {Code: "D02", Price: 20}}
-	db.Create(&products)
 }

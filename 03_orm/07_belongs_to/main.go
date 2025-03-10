@@ -10,10 +10,17 @@ import (
 	"time"
 )
 
-type Product struct {
+// `User` 属于 `Company`，`CompanyID` 是外键
+type User struct {
 	gorm.Model
-	Code  string
-	Price uint
+	Name      string
+	CompanyID int
+	Company   Company
+}
+
+type Company struct {
+	ID   int
+	Name string
 }
 
 func main() {
@@ -35,19 +42,24 @@ func main() {
 	}
 	fmt.Println("connect database success")
 
-	err = db.AutoMigrate(&Product{})
-	if err != nil {
-		panic("failed to auto migrate database")
-	}
+	/** 创建表 */
+	//err = db.AutoMigrate(&User{})
+	//if err != nil {
+	//	panic("failed to auto create table")
+	//}
 
-	/** 单条插入 */
-	//product := &Product{Code: "D42", Price: 100}
-	//result := db.Create(product)
-	//fmt.Println(product.ID)
-	//fmt.Println(result.Error)
-	//fmt.Println(result.RowsAffected)
+	/** 新增一条数据 */
+	//db.Create(&User{
+	//	Name: "shane",
+	//	Company: Company{
+	//		ID:   1,
+	//		Name: "min",
+	//	},
+	//})
 
-	/** 批量插入 */
-	products := []Product{{Code: "D01", Price: 10}, {Code: "D02", Price: 20}}
-	db.Create(&products)
+	/** 关联查询 */
+	var user User
+	db.Preload("Company").First(&user)
+
+	fmt.Println(user.Name, user.Company.Name)
 }
