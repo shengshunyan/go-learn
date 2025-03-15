@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package person;
+
+option go_package = "06_protobuf/proto";
+
+// 在 go-learn/04_gin 目录下
+// 生成 Protobuf 消息代码: protoc -I 06_protobuf/proto person.proto --go_out=.
+
+message Person {
+  string name = 1;
+  int32 age = 2;
+}
